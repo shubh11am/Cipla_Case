@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "verify": "tsx scripts/verify.ts"
+    "verify": "tsx scripts/verify.ts",
+    "verify:model": "tsx scripts/verify-model.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.68.0",

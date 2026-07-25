@@ -62,7 +62,7 @@ Everything is overridable by environment variable, so you never have to touch th
 | `GEMINI_API_KEY` / `GOOGLE_API_KEY` | Use Google Gemini |
 | `ANTHROPIC_API_KEY` | Use Anthropic Claude |
 | `LLM_PROVIDER` | Force one: `gemini` or `anthropic` |
-| `GEMINI_MODEL` | Defaults to `gemini-2.5-flash` |
+| `GEMINI_MODEL` | Optional pin. Leave unset and the app asks Google which models the key can use, then picks the newest stable Flash. |
 | `ANTHROPIC_MODEL` | Defaults to `claude-opus-5` |
 
 The answer footer shows which provider replied. If a key is rejected or a model id is not
@@ -106,9 +106,11 @@ The app is a static page plus one serverless function, so it runs comfortably on
 | Path | What it is |
 |---|---|
 | `lib/score.ts` | The scoring engine and five screens, ported from Python. Must stay numerically identical. |
+| `lib/gemini-model.ts` | Discovers which Gemini models the key can use and ranks them, so no model id is hardcoded. |
 | `app/page.tsx` | The four tabs and all state. |
 | `components/Matrix.tsx` | The attractiveness × right-to-win chart, drawn as SVG. |
 | `components/SpaceDetail.tsx` | The `--explain` audit trail as a panel. |
 | `app/api/ask/route.ts` | The only server-side code. Calls Gemini or Claude, grounded in the computed table. |
 | `data/*.json` | Exported by `agent/export_web.py`. Do not hand-edit. |
 | `scripts/verify.ts` | Proves the browser reproduces the Python agent. |
+| `scripts/verify-model.ts` | Proves the Gemini model picker ranks sensibly (`npm run verify:model`). |

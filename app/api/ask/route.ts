@@ -7,13 +7,14 @@
  *   GEMINI_API_KEY      → Google Gemini      (also accepts GOOGLE_API_KEY)
  *   ANTHROPIC_API_KEY   → Anthropic Claude
  *   LLM_PROVIDER        → "gemini" | "anthropic"   (optional override)
- *   GEMINI_MODEL        → defaults to gemini-2.5-flash
+ *   GEMINI_MODEL        → optional pin; unset = discovered from the key
  *   ANTHROPIC_MODEL     → defaults to claude-opus-5
  *
  * With no key at all the route still returns 200 with an explanation, so the rest
  * of the app is never blocked by a missing credential.
  */
 import { NextResponse } from "next/server";
+import { resolveGeminiModel, listGeminiModels, clearModelCache } from "@/lib/gemini-model";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -49,7 +50,7 @@ function chooseProvider(): "gemini" | "anthropic" | null {
 async function askGemini(prompt: string): Promise<string> {
   const { GoogleGenAI } = await import("@google/genai");
   const ai = new GoogleGenAI({ apiKey: GEMINI_KEY() as string });
-  const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+  const model = await resolveGeminiModel(GEMINI_KEY() as string);
   const res = await ai.models.generateContent({
     model,
     contents: prompt,
@@ -114,12 +115,27 @@ export async function POST(req: Request) {
         `The ${provider === "gemini" ? "GEMINI_API_KEY" : "ANTHROPIC_API_KEY"} on this ` +
         `deployment was rejected. Check it under Settings → Environment Variables.`;
     } else if (/not found|404|unsupported|no such model/i.test(raw)) {
-      const m = provider === "gemini"
-        ? process.env.GEMINI_MODEL || "gemini-2.5-flash"
-        : process.env.ANTHROPIC_MODEL || "claude-opus-5";
-      message =
-        `The model "${m}" was not available to this key. Set ` +
-        `${provider === "gemini" ? "GEMINI_MODEL" : "ANTHROPIC_MODEL"} to one it can access.`;
+      if (provider === "gemini") {
+        // don't just say "wrong model" — tell them which ones this key actually has
+        const pinned = process.env.GEMINI_MODEL?.trim();
+        let available = "";
+        try {
+          clearModelCache();
+          const models = await listGeminiModels(GEMINI_KEY() as string);
+          available = models.length
+            ? `\n\nModels this key can use: ${models.slice(0, 12).join(", ")}` +
+              (models.length > 12 ? ` (+${models.length - 12} more)` : "")
+            : "";
+        } catch { /* listing failed too — fall through with the plain message */ }
+        message = pinned
+          ? `GEMINI_MODEL is pinned to "${pinned}", which this key cannot use. ` +
+            `Change it under Settings → Environment Variables, or remove it entirely and the ` +
+            `app will pick a model automatically.${available}`
+          : `No usable Gemini model was found for this key.${available}`;
+      } else {
+        const m = process.env.ANTHROPIC_MODEL || "claude-opus-5";
+        message = `The model "${m}" was not available to this key. Set ANTHROPIC_MODEL to one it can access.`;
+      }
     } else if (/rate|quota|429|resource.*exhausted/i.test(raw)) {
       message = "Rate limited or out of quota — wait a moment and try again.";
     } else {
