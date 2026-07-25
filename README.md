@@ -42,13 +42,31 @@ npm run dev
 
 Open http://localhost:3000.
 
-To enable the "Ask the agent" tab locally, create `.env.local`:
+To enable the "Ask the agent" tab locally, create `.env.local` with **either** key:
 
 ```
-ANTHROPIC_API_KEY=sk-ant-...
+GEMINI_API_KEY=...            # from aistudio.google.com/apikey
+# or
+ANTHROPIC_API_KEY=sk-ant-...  # from console.anthropic.com
 ```
 
-Without it, every other tab works and the Ask tab explains what is missing.
+Without a key, every other tab works and the Ask tab explains what is missing.
+
+### Which model answers
+
+The route picks a provider from whichever key is present — Gemini first if both are set.
+Everything is overridable by environment variable, so you never have to touch the code:
+
+| Variable | Effect |
+|---|---|
+| `GEMINI_API_KEY` / `GOOGLE_API_KEY` | Use Google Gemini |
+| `ANTHROPIC_API_KEY` | Use Anthropic Claude |
+| `LLM_PROVIDER` | Force one: `gemini` or `anthropic` |
+| `GEMINI_MODEL` | Defaults to `gemini-2.5-flash` |
+| `ANTHROPIC_MODEL` | Defaults to `claude-opus-5` |
+
+The answer footer shows which provider replied. If a key is rejected or a model id is not
+available to it, the tab says exactly that rather than failing silently.
 
 ---
 
@@ -74,8 +92,10 @@ setting.
 1. Push to GitHub: `git add -A && git commit -m "web app" && git push`
 2. On vercel.com → **Add New → Project** → import `shubh11am/Cipla_Case` → **Deploy**.
    Next.js is auto-detected; leave every build setting alone.
-3. Optional — **Settings → Environment Variables** → add `ANTHROPIC_API_KEY` to enable the Ask
-   tab, then **Deployments → ⋯ → Redeploy**.
+3. Optional — **Settings → Environment Variables** → add `GEMINI_API_KEY` (or
+   `ANTHROPIC_API_KEY`) to enable the Ask tab, then **Deployments → ⋯ → Redeploy**.
+   Environment variables are read at request time on the server; the key is never sent
+   to the browser.
 
 The app is a static page plus one serverless function, so it runs comfortably on the free tier.
 
@@ -89,6 +109,6 @@ The app is a static page plus one serverless function, so it runs comfortably on
 | `app/page.tsx` | The four tabs and all state. |
 | `components/Matrix.tsx` | The attractiveness × right-to-win chart, drawn as SVG. |
 | `components/SpaceDetail.tsx` | The `--explain` audit trail as a panel. |
-| `app/api/ask/route.ts` | The only server-side code. Calls Claude, grounded in the computed table. |
+| `app/api/ask/route.ts` | The only server-side code. Calls Gemini or Claude, grounded in the computed table. |
 | `data/*.json` | Exported by `agent/export_web.py`. Do not hand-edit. |
 | `scripts/verify.ts` | Proves the browser reproduces the Python agent. |

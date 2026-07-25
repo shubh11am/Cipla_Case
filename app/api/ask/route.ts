@@ -1,4 +1,18 @@
-import Anthropic from "@anthropic-ai/sdk";
+/**
+ * The "Ask the agent" endpoint — the only server-side code in the app.
+ *
+ * Supports Gemini and Claude. Which one runs is decided by whichever API key is
+ * present, so the deployment works with either; set LLM_PROVIDER to force one.
+ *
+ *   GEMINI_API_KEY      → Google Gemini      (also accepts GOOGLE_API_KEY)
+ *   ANTHROPIC_API_KEY   → Anthropic Claude
+ *   LLM_PROVIDER        → "gemini" | "anthropic"   (optional override)
+ *   GEMINI_MODEL        → defaults to gemini-2.5-flash
+ *   ANTHROPIC_MODEL     → defaults to claude-opus-5
+ *
+ * With no key at all the route still returns 200 with an explanation, so the rest
+ * of the app is never blocked by a missing credential.
+ */
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -20,15 +34,60 @@ Field meanings that matter:
 
 Answer in 3–6 tight sentences. Lead with the answer, then the evidence. Use plain language — the reader may not know pharma. Do not use markdown headers or bullet lists; write prose.`;
 
+const GEMINI_KEY = () => process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+const CLAUDE_KEY = () => process.env.ANTHROPIC_API_KEY;
+
+function chooseProvider(): "gemini" | "anthropic" | null {
+  const forced = process.env.LLM_PROVIDER?.toLowerCase().trim();
+  if (forced === "gemini") return GEMINI_KEY() ? "gemini" : null;
+  if (forced === "anthropic" || forced === "claude") return CLAUDE_KEY() ? "anthropic" : null;
+  if (GEMINI_KEY()) return "gemini";
+  if (CLAUDE_KEY()) return "anthropic";
+  return null;
+}
+
+async function askGemini(prompt: string): Promise<string> {
+  const { GoogleGenAI } = await import("@google/genai");
+  const ai = new GoogleGenAI({ apiKey: GEMINI_KEY() as string });
+  const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+  const res = await ai.models.generateContent({
+    model,
+    contents: prompt,
+    config: { systemInstruction: SYSTEM, maxOutputTokens: 1200 },
+  });
+  return (res.text ?? "").trim();
+}
+
+async function askClaude(prompt: string): Promise<string> {
+  const Anthropic = (await import("@anthropic-ai/sdk")).default;
+  const client = new Anthropic();
+  const model = process.env.ANTHROPIC_MODEL || "claude-opus-5";
+  const msg = await client.messages.create({
+    model,
+    max_tokens: 1200,
+    system: SYSTEM,
+    messages: [{ role: "user", content: prompt }],
+  });
+  if (msg.stop_reason === "refusal") return "That request was declined. Try rephrasing it.";
+  return msg.content
+    .map((b) => (b.type === "text" ? b.text : ""))
+    .join("\n")
+    .trim();
+}
+
 export async function POST(req: Request) {
-  if (!process.env.ANTHROPIC_API_KEY) {
+  const provider = chooseProvider();
+
+  if (!provider) {
     return NextResponse.json({
       answer:
         "The live query layer is not configured on this deployment.\n\n" +
-        "To enable it, add an environment variable named ANTHROPIC_API_KEY in your Vercel " +
-        "project settings (Settings → Environment Variables) and redeploy. Everything else on " +
-        "this page — the scoring, the screens, the backtest and the business case — is computed " +
-        "from the data and works without it.",
+        "Add ONE of these as an environment variable in your Vercel project " +
+        "(Settings → Environment Variables), then redeploy:\n\n" +
+        "  GEMINI_API_KEY     — from aistudio.google.com/apikey\n" +
+        "  ANTHROPIC_API_KEY  — from console.anthropic.com\n\n" +
+        "Everything else on this page — the scoring, the screens, the backtest and the " +
+        "business case — is computed from the data and works without a key.",
     });
   }
 
@@ -38,34 +97,34 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No question provided." }, { status: 400 });
     }
 
-    const client = new Anthropic();
-    const msg = await client.messages.create({
-      model: "claude-opus-5",
-      max_tokens: 1200,
-      system: SYSTEM,
-      messages: [{
-        role: "user",
-        content: `AGENT OUTPUT (current weights)\n${JSON.stringify(spaces, null, 1)}\n\nQUESTION: ${question}`,
-      }],
-    });
+    const prompt =
+      `AGENT OUTPUT (current weights)\n${JSON.stringify(spaces, null, 1)}\n\nQUESTION: ${question}`;
 
-    if (msg.stop_reason === "refusal") {
-      return NextResponse.json({ answer: "That request was declined. Try rephrasing it." });
-    }
-
-    const answer = msg.content
-      .filter((b): b is Anthropic.TextBlock => b.type === "text")
-      .map((b) => b.text)
-      .join("\n")
-      .trim();
-
-    return NextResponse.json({ answer: answer || "No answer returned." });
+    const answer = provider === "gemini" ? await askGemini(prompt) : await askClaude(prompt);
+    return NextResponse.json({ answer: answer || "No answer returned.", provider });
   } catch (e: unknown) {
     const name = e instanceof Error ? e.constructor.name : "Error";
-    const message =
-      name === "AuthenticationError" ? "The ANTHROPIC_API_KEY on this deployment is not valid."
-      : name === "RateLimitError" ? "Rate limited — wait a few seconds and try again."
-      : `Could not reach the model (${name}).`;
+    const raw = e instanceof Error ? e.message : String(e);
+
+    // Surface the cause plainly. A rejected key and an unavailable model id are the
+    // two things that actually go wrong here, and each is one setting away from fixed.
+    let message: string;
+    if (/api[_ ]?key|unauthenticated|401|invalid.*credential|permission/i.test(raw)) {
+      message =
+        `The ${provider === "gemini" ? "GEMINI_API_KEY" : "ANTHROPIC_API_KEY"} on this ` +
+        `deployment was rejected. Check it under Settings → Environment Variables.`;
+    } else if (/not found|404|unsupported|no such model/i.test(raw)) {
+      const m = provider === "gemini"
+        ? process.env.GEMINI_MODEL || "gemini-2.5-flash"
+        : process.env.ANTHROPIC_MODEL || "claude-opus-5";
+      message =
+        `The model "${m}" was not available to this key. Set ` +
+        `${provider === "gemini" ? "GEMINI_MODEL" : "ANTHROPIC_MODEL"} to one it can access.`;
+    } else if (/rate|quota|429|resource.*exhausted/i.test(raw)) {
+      message = "Rate limited or out of quota — wait a moment and try again.";
+    } else {
+      message = `Could not reach ${provider} (${name}): ${raw.slice(0, 200)}`;
+    }
     return NextResponse.json({ error: message }, { status: 200 });
   }
 }

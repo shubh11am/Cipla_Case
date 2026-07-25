@@ -376,6 +376,7 @@ export default function Page() {
 function Ask({ scored }: { scored: ReturnType<typeof scoreAll> }) {
   const [q, setQ] = useState("");
   const [a, setA] = useState("");
+  const [via, setVia] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   const suggestions = [
@@ -387,7 +388,7 @@ function Ask({ scored }: { scored: ReturnType<typeof scoreAll> }) {
 
   async function ask(question: string) {
     if (!question.trim() || busy) return;
-    setBusy(true); setA(""); setQ(question);
+    setBusy(true); setA(""); setVia(null); setQ(question);
     try {
       const res = await fetch("/api/ask", {
         method: "POST",
@@ -408,6 +409,7 @@ function Ask({ scored }: { scored: ReturnType<typeof scoreAll> }) {
       });
       const j = await res.json();
       setA(j.answer ?? j.error ?? "No response.");
+      setVia(j.provider ?? null);
     } catch (e) {
       setA("Could not reach the API route. If you are running locally, check the dev server.");
     } finally {
@@ -421,7 +423,7 @@ function Ask({ scored }: { scored: ReturnType<typeof scoreAll> }) {
       <p className="sub">
         Questions are answered from the <b>computed table above</b>, not from the model&apos;s own
         knowledge — it is instructed to cite only numbers present in the data and to say so when the
-        data cannot answer. Change the weights on the first tab and the answers change with them.
+        data cannot answer. Runs on Gemini or Claude, whichever key the deployment has. Change the weights on the first tab and the answers change with them.
       </p>
       <div className="card">
         <div className="ask-row">
@@ -440,6 +442,11 @@ function Ask({ scored }: { scored: ReturnType<typeof scoreAll> }) {
           ))}
         </div>
         {a && <div className="answer">{a}</div>}
+        {via && (
+          <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 8 }}>
+            answered by {via} · grounded in the computed table above, not the model&apos;s own knowledge
+          </div>
+        )}
       </div>
     </section>
   );
