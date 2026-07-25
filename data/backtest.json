@@ -1,0 +1,113 @@
+{
+ "market_value_growth": 13.2952,
+ "market_real_growth": 6.2626,
+ "rows": [
+  {
+   "id": "AHT_CILNIDIPINE",
+   "label": "Cilnidipine-anchored antihypertensive platform",
+   "blind_score": 67.5959,
+   "shortlisted": true,
+   "actual_value_growth": 21.4675,
+   "actual_real_growth": 13.0906,
+   "pool": 2519.4222
+  },
+  {
+   "id": "AHT_TELMI_CORE",
+   "label": "Telmisartan core franchise (plain, +amlodipine, +diuretic)",
+   "blind_score": 67.4014,
+   "shortlisted": false,
+   "actual_value_growth": 11.4726,
+   "actual_real_growth": 5.099,
+   "pool": 4654.716
+  },
+  {
+   "id": "LIPID_SECPREV",
+   "label": "Statin + antiplatelet fixed-dose (post-event secondary prevention)",
+   "blind_score": 66.0807,
+   "shortlisted": true,
+   "actual_value_growth": 14.1229,
+   "actual_real_growth": 7.4202,
+   "pool": 2893.6668
+  },
+  {
+   "id": "AHT_BB_ARB",
+   "label": "Beta-blocker + ARB fixed-dose combinations",
+   "blind_score": 60.6049,
+   "shortlisted": true,
+   "actual_value_growth": 18.693,
+   "actual_real_growth": 10.8448,
+   "pool": 1198.9347
+  },
+  {
+   "id": "LIPID_FIBRATE_TG",
+   "label": "Fibrate & statin+fibrate (triglyceride / residual-risk lipid)",
+   "blind_score": 59.0034,
+   "shortlisted": true,
+   "actual_value_growth": 17.1253,
+   "actual_real_growth": 8.6727,
+   "pool": 1002.1143
+  },
+  {
+   "id": "AHT_TRIPLE_SPC",
+   "label": "Triple / poly antihypertensive single-pill combinations",
+   "blind_score": 56.1617,
+   "shortlisted": false,
+   "actual_value_growth": 12.3365,
+   "actual_real_growth": 4.563,
+   "pool": 765.6509
+  },
+  {
+   "id": "LIPID_NONSTATIN",
+   "label": "Non-statin / residual-risk lipid (ezetimibe, bempedoic, saroglitazar, PCSK9)",
+   "blind_score": 55.562,
+   "shortlisted": true,
+   "actual_value_growth": 52.3184,
+   "actual_real_growth": 42.9172,
+   "pool": 1022.0607
+  },
+  {
+   "id": "AHT_LEGACY",
+   "label": "Legacy antihypertensives (atenolol/amlodipine, losartan, ACEi, S-amlodipine)",
+   "blind_score": 52.7402,
+   "shortlisted": false,
+   "actual_value_growth": 2.7545,
+   "actual_real_growth": -3.677,
+   "pool": 3179.4996
+  },
+  {
+   "id": "AHT_OTHER",
+   "label": "Other antihypertensives (alpha-blockers, olmesartan, misc.)",
+   "blind_score": 52.3636,
+   "shortlisted": false,
+   "actual_value_growth": 8.7848,
+   "actual_real_growth": 1.1742,
+   "pool": 2051.856
+  },
+  {
+   "id": "LIPID_STATIN_CORE",
+   "label": "Core statins (atorvastatin, rosuvastatin plain)",
+   "blind_score": 50.8383,
+   "shortlisted": false,
+   "actual_value_growth": 11.7119,
+   "actual_real_growth": 6.419,
+   "pool": 2799.7642
+  },
+  {
+   "id": "ANGINA_ANTIISCHEMIC",
+   "label": "Chronic angina / anti-ischaemic (nicorandil, nitrates, ranolazine)",
+   "blind_score": 39.2945,
+   "shortlisted": false,
+   "actual_value_growth": 12.7024,
+   "actual_real_growth": 3.9197,
+   "pool": 1156.7942
+  }
+ ],
+ "summary": {
+  "shortlisted": 5,
+  "shortlisted_beat": 5,
+  "rejected": 6,
+  "rejected_beat": 1,
+  "shortlist_real": 13.0329,
+  "rejected_real": 2.6439
+ }
+}

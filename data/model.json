@@ -1,0 +1,269 @@
+{
+ "pillar_weights": {
+  "market_attractiveness": 0.3,
+  "future_potential": 0.3,
+  "competitive_headroom": 0.2,
+  "right_to_win": 0.2
+ },
+ "sub_weights": {
+  "market_attractiveness": {
+   "size_mat_t2": 0.45,
+   "growth_pool_abs": 0.55
+  },
+  "future_potential": {
+   "real_growth": 0.3,
+   "volume_growth": 0.25,
+   "momentum": 0.15,
+   "external_signal": 0.3
+  },
+  "competitive_headroom": {
+   "inv_leader_share": 0.3,
+   "inv_entrant_rate": 0.3,
+   "inv_brand_density": 0.2,
+   "pricing_power": 0.2
+  },
+  "right_to_win": {
+   "current_position": 0.3,
+   "adjacency": 0.4,
+   "brand_extension": 0.3
+  }
+ },
+ "screens": [
+  {
+   "id": "S1_MATERIALITY",
+   "rule": "mat_t2 >= 150 and growth_pool_abs >= 15",
+   "rationale": "Cipla's entire cardiac book is Rs 389 Cr. A space must be big enough that a credible 8-10% share adds >=Rs 15 Cr and a realistic ambition moves the needle. Resolves: market size vs growth rate - we require a minimum ABSOLUTE growth pool, so a 90% growth rate on a Rs 20 Cr base does not beat a 20% growth rate on Rs 900 Cr."
+  },
+  {
+   "id": "S2_REAL_DEMAND",
+   "rule": "real_growth >= market_real_growth",
+   "rationale": "Reject pools whose headline growth is price, not patients. Market real growth is computed from the data (MAT CP FEB'26 / MAT FEB'25 - 1). Resolves: growth vs quality-of-growth - DPCO-capped molecules can post double-digit value growth on shrinking volumes; those are harvest assets, not investment cases."
+  },
+  {
+   "id": "S3_WINNABILITY",
+   "rule": "right_to_win_score >= 40 or adjacency >= 0.45",
+   "rationale": "Reject attractive-but-unwinnable. A space qualifies either because Cipla already has position, or because it is one adjacency step from a franchise Cipla owns. Resolves: attractiveness vs right-to-win - attractiveness never overrides winnability."
+  },
+  {
+   "id": "S4_DURABILITY",
+   "rule": "net_external_signal > -0.35",
+   "rationale": "Reject value traps - spaces facing a structural headwind (price control, guideline de-prioritisation, blocked by originator exclusivity) inside the horizon."
+  },
+  {
+   "id": "S5_CAPABILITY",
+   "rule": "capability_barrier <= 0.60",
+   "rationale": "Reject spaces requiring a capability Cipla cannot build in 3-5 years within this franchise (e.g. a biologic-only pool). Barrier is set per cluster in section 2."
+  }
+ ],
+ "action_bands": {
+  "double_down": {
+   "min_attractiveness": 55,
+   "min_rtw": 55
+  },
+  "build": {
+   "min_attractiveness": 55,
+   "min_rtw": 0
+  },
+  "selective": {
+   "min_attractiveness": 0,
+   "min_rtw": 55
+  },
+  "avoid": {
+   "min_attractiveness": 0,
+   "min_rtw": 0
+  }
+ },
+ "clusters": [
+  {
+   "id": "LIPID_NONSTATIN",
+   "label": "Non-statin / residual-risk lipid (ezetimibe, bempedoic, saroglitazar, PCSK9)",
+   "archetype": "Escalation therapy for statin-insufficient patients",
+   "prescriber": "Cardiologist + Diabetologist",
+   "capability_barrier": 0.55
+  },
+  {
+   "id": "LIPID_FIBRATE_TG",
+   "label": "Fibrate & statin+fibrate (triglyceride / residual-risk lipid)",
+   "archetype": "Beyond-LDL risk control",
+   "prescriber": "Cardiologist + Diabetologist + Physician",
+   "capability_barrier": 0.15
+  },
+  {
+   "id": "LIPID_SECPREV",
+   "label": "Statin + antiplatelet fixed-dose (post-event secondary prevention)",
+   "archetype": "Polypill for established CVD",
+   "prescriber": "Cardiologist",
+   "capability_barrier": 0.25
+  },
+  {
+   "id": "LIPID_STATIN_CORE",
+   "label": "Core statins (atorvastatin, rosuvastatin plain)",
+   "archetype": "Primary LDL control",
+   "prescriber": "Physician + Cardiologist",
+   "capability_barrier": 0.1
+  },
+  {
+   "id": "AHT_CILNIDIPINE",
+   "label": "Cilnidipine-anchored antihypertensive platform",
+   "archetype": "4th-gen CCB backbone (plain + dual + triple SPCs)",
+   "prescriber": "Cardiologist + Nephrologist + Physician",
+   "capability_barrier": 0.2
+  },
+  {
+   "id": "AHT_BB_ARB",
+   "label": "Beta-blocker + ARB fixed-dose combinations",
+   "archetype": "Rate + RAAS single pill",
+   "prescriber": "Cardiologist + Physician",
+   "capability_barrier": 0.2
+  },
+  {
+   "id": "AHT_TRIPLE_SPC",
+   "label": "Triple / poly antihypertensive single-pill combinations",
+   "archetype": "Single-pill combination for uncontrolled HTN",
+   "prescriber": "Cardiologist + Physician",
+   "capability_barrier": 0.3
+  },
+  {
+   "id": "AHT_TELMI_CORE",
+   "label": "Telmisartan core franchise (plain, +amlodipine, +diuretic)",
+   "archetype": "Mass-market RAAS backbone",
+   "prescriber": "Physician",
+   "capability_barrier": 0.1
+  },
+  {
+   "id": "ANGINA_ANTIISCHEMIC",
+   "label": "Chronic angina / anti-ischaemic (nicorandil, nitrates, ranolazine)",
+   "archetype": "Symptomatic ischaemia management",
+   "prescriber": "Cardiologist",
+   "capability_barrier": 0.25
+  },
+  {
+   "id": "AHT_LEGACY",
+   "label": "Legacy antihypertensives (atenolol/amlodipine, losartan, ACEi, S-amlodipine)",
+   "archetype": "Mature, guideline-deprioritised backbone",
+   "prescriber": "Physician",
+   "capability_barrier": 0.05
+  },
+  {
+   "id": "AHT_OTHER",
+   "label": "Other antihypertensives (alpha-blockers, olmesartan, misc.)",
+   "archetype": "Niche / add-on",
+   "prescriber": "Urologist + Physician",
+   "capability_barrier": 0.2
+  }
+ ],
+ "signals": [
+  {
+   "id": "CSI_2024_NONSTATIN",
+   "label": "CSI 2024 dyslipidaemia guidelines: lower LDL-C targets (<70 high-risk, <55 very-high), explicit escalation to oral non-statins then PCSK9i/inclisiran; non-HDL-C target when TG>150",
+   "direction": 1,
+   "magnitude": 0.9,
+   "confidence": 0.9,
+   "source": "CSI Clinical Practice Guidelines for Dyslipidemia Management, Indian Heart Journal 2024 - https://csi.org.in/frontend/assets/assets/CSI-clinical-practice-guidelines-for-dyslipidemia-_240413_141815.pdf"
+  },
+  {
+   "id": "INDIAB_LIPID_BURDEN",
+   "label": "ICMR-INDIAB: ~79-81% of Indian adults have at least one lipid abnormality; high TG / low HDL 'Indian dyslipidaemia phenotype' dominates - a triglyceride-led, not LDL-led, problem",
+   "direction": 1,
+   "magnitude": 0.65,
+   "confidence": 0.8,
+   "source": "ICMR-INDIAB, Prevalence of Dyslipidemia in Urban and Rural India (PMC4016101) + ICMR-INDIAB-17, Lancet Diabetes & Endocrinology 2023"
+  },
+  {
+   "id": "INDIAB_HTN_PREVALENCE",
+   "label": "ICMR-INDIAB-17: hypertension prevalence 35.5% of Indian adults (Lancet D&E 2023); treatment and control rates remain low - volume headroom, not just price",
+   "direction": 1,
+   "magnitude": 0.5,
+   "confidence": 0.9,
+   "source": "ICMR-INDIAB-17, Lancet Diabetes & Endocrinology 2023 - https://www.thelancet.com/journals/landia/article/PIIS2213-8587(23)00119-5/fulltext"
+  },
+  {
+   "id": "SPC_ADHERENCE_SHIFT",
+   "label": "Guideline shift to single-pill combinations as first-line for stage-2 HTN (WHO HEARTS / India Hypertension Control Initiative); SPCs improve adherence and control rates",
+   "direction": 1,
+   "magnitude": 0.7,
+   "confidence": 0.75,
+   "source": "WHO HEARTS technical package; India Hypertension Control Initiative (IHCI) programme reports, ICMR-NCDIR"
+  },
+  {
+   "id": "DPCO_NLEM_CEILING",
+   "label": "NLEM 2022 scheduled cardiac molecules (incl. amlodipine, atenolol, telmisartan, atorvastatin, enalapril) are DPCO ceiling-priced; annual revision is WPI-linked (~1-2%). Non-scheduled molecules/FDCs price freely (data shows 6-9%)",
+   "direction": -1,
+   "magnitude": 0.7,
+   "confidence": 0.85,
+   "source": "NLEM 2022, MoHFW/CDSCO - https://cdsco.gov.in/opencms/resources/UploadCDSCOWeb/2018/UploadConsumer/nlem2022.pdf ; DPCO 2013 First Schedule; NPPA ceiling price notifications"
+  },
+  {
+   "id": "ATENOLOL_DEPRIORITISATION",
+   "label": "Atenolol de-prioritised as first-line antihypertensive in current hypertension guidelines (ESC/ISH/ACC) except post-MI / rate control; prescriber base is ageing out",
+   "direction": -1,
+   "magnitude": 0.65,
+   "confidence": 0.75,
+   "source": "ESC/ESH 2023 Hypertension Guidelines; ISH 2020 Global Hypertension Practice Guidelines"
+  },
+  {
+   "id": "CILNIDIPINE_INDIA_PREFERENCE",
+   "label": "Cilnidipine (N/L-type CCB) preferred in India for reduced pedal oedema, sympathetic modulation and renoprotection vs amlodipine; India+Japan concentrated, so global generic price pressure is structurally low",
+   "direction": 1,
+   "magnitude": 0.6,
+   "confidence": 0.7,
+   "source": "Indian cardiology literature on N/L-type CCBs (JAPI / Indian Heart Journal reviews); market concentration evident in dataset"
+  },
+  {
+   "id": "ENVIRONMENT_AIR_QUALITY",
+   "label": "Ambient PM2.5 exposure is an established driver of ischaemic heart disease and hypertension incidence; India carries among the world's highest PM2.5 burdens - structural expansion of the treated cardiac pool",
+   "direction": 1,
+   "magnitude": 0.4,
+   "confidence": 0.65,
+   "source": "Global Burden of Disease / State of Global Air; Lancet Planetary Health India air pollution and CVD analyses"
+  },
+  {
+   "id": "SAROGLITAZAR_EXCLUSIVITY",
+   "label": "Saroglitazar is a Zydus-originated NCE under exclusivity; the segment is real (Rs 538 Cr, +46%) but not addressable by generic entry within the horizon. Read as proof of category demand, not as an entry point",
+   "direction": -1,
+   "magnitude": 0.5,
+   "confidence": 0.7,
+   "source": "Zydus Lifesciences product disclosures; Indian Patent Office filings for saroglitazar"
+  },
+  {
+   "id": "PATENT_CLIFF_OPEN_NONSTATIN",
+   "label": "Patent/IP landscape: ezetimibe and bempedoic acid are past exclusivity and freely genericisable in India, so the non-statin escalation tier is open NOW. Saroglitazar remains under Zydus originator exclusivity - the category is proven but that molecule is not an entry route inside the horizon",
+   "direction": 1,
+   "magnitude": 0.75,
+   "confidence": 0.75,
+   "source": "CDSCO approval records for ezetimibe / bempedoic acid FDCs; Indian Patent Office filings for saroglitazar. Re-verify with: python signal_agent.py --patent-scan"
+  },
+  {
+   "id": "PATENT_CLIFF_LEGACY_NONE",
+   "label": "Patent/IP landscape: the legacy antihypertensive and core-statin pools are fully genericised with no exclusivity events left to unlock. No IP-driven upside is available - the only lever left is price, which DPCO caps",
+   "direction": -1,
+   "magnitude": 0.4,
+   "confidence": 0.85,
+   "source": "Absence of live exclusivity in these molecule classes; corroborated in-dataset by 55-169 competitors per subgroup and 0.8-1.4% realised price growth"
+  },
+  {
+   "id": "SUPPLY_CHAIN_API_CONCENTRATION",
+   "label": "Geopolitical / supply chain: India imports a large majority of bulk drug intermediates and KSMs from China, and cardiovascular APIs (statins, sartans) sit in that exposed set. A supply or tariff shock raises input cost across the cardiac portfolio - and hits hardest where DPCO caps the ability to pass it through",
+   "direction": -1,
+   "magnitude": 0.35,
+   "confidence": 0.6,
+   "source": "Dept. of Pharmaceuticals PLI scheme for bulk drugs / KSMs; Indian pharma API import-dependence reporting. Re-verify with: python signal_agent.py --patent-scan"
+  },
+  {
+   "id": "SUPPLY_CHAIN_PLI_DOMESTIC",
+   "label": "Geopolitical / supply chain: the PLI scheme for bulk drugs is intended to re-shore KSM and API manufacture. Backward-integrated players gain relative cost resilience; the effect is directionally positive but slower than the 3-5 year decision horizon for most molecules",
+   "direction": 1,
+   "magnitude": 0.2,
+   "confidence": 0.5,
+   "source": "Dept. of Pharmaceuticals, Production Linked Incentive scheme for bulk drugs (KSMs / DIs / APIs)"
+  },
+  {
+   "id": "EZETIMIBE_GENERIC_OPEN",
+   "label": "Ezetimibe and bempedoic acid are off-patent / freely genericisable in India and are the guideline-mandated first escalation after statins - open, fast-growing, low-barrier entry",
+   "direction": 1,
+   "magnitude": 0.85,
+   "confidence": 0.8,
+   "source": "CDSCO approvals for ezetimibe and bempedoic acid FDCs; CSI 2024 guidelines escalation pathway"
+  }
+ ]
+}

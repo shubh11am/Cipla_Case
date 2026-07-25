@@ -1,0 +1,402 @@
+{
+ "assumptions": {
+  "selling_cost_mature_pct": 0.22,
+  "selling_cost_build_pct": 0.32,
+  "mr_cost_lakh": 9.0,
+  "mr_productivity_lakh": 55.0,
+  "legacy_decline_real": -0.037,
+  "legacy_redeploy_pct": 0.5,
+  "legacy_value_cagr": 0.0,
+  "horizon_years": 5,
+  "cannibalisation_pct": 0.15,
+  "rides_existing_bag_pct": 0.6,
+  "marginal_promo_pct": 0.08
+ },
+ "gm": {
+  "BEYOND_LDL": 0.7,
+  "CILN_TRIPLE": 0.72,
+  "BB_ARB": 0.7,
+  "SECPREV": 0.68,
+  "LEGACY": 0.56
+ },
+ "do_nothing": {
+  "fy31": 487.7147,
+  "share": 1.1388
+ },
+ "scenarios": {
+  "bear": {
+   "fy31": 568.5997,
+   "share": 1.5189,
+   "new_cash": 0.7004,
+   "net_contribution": 294.6434,
+   "cum_gross_profit": 337.1648,
+   "cum_selling": 42.5214,
+   "mr_add": 140.7096,
+   "spaces": [
+    {
+     "space": "Beyond-LDL lipid (fibrate + non-statin)",
+     "pool_fy26": 2024.2,
+     "pool_fy31": 3259.9943,
+     "cipla_fy26": 67.16,
+     "share_fy26": 3.3179,
+     "share_fy31": 5.0,
+     "cipla_fy31": 162.9997,
+     "delta": 95.8397,
+     "gm": 70.0,
+     "mr_equiv": 69.7016
+    },
+    {
+     "space": "Cilnidipine triple-SPC layer",
+     "pool_fy26": 558.0,
+     "pool_fy31": 898.6646,
+     "cipla_fy26": 2.63,
+     "share_fy26": 0.4713,
+     "share_fy31": 1.5,
+     "cipla_fy31": 13.48,
+     "delta": 10.85,
+     "gm": 72.0,
+     "mr_equiv": 7.8909
+    },
+    {
+     "space": "Beta-blocker + ARB FDC",
+     "pool_fy26": 1198.9,
+     "pool_fy31": 1930.8404,
+     "cipla_fy26": 12.9,
+     "share_fy26": 1.076,
+     "share_fy31": 2.5,
+     "cipla_fy31": 48.271,
+     "delta": 35.371,
+     "gm": 70.0,
+     "mr_equiv": 25.7244
+    },
+    {
+     "space": "Statin + antiplatelet FDC (rosuva only)",
+     "pool_fy26": 2893.7,
+     "pool_fy31": 4660.3328,
+     "cipla_fy26": 18.49,
+     "share_fy26": 0.639,
+     "share_fy31": 1.5,
+     "cipla_fy31": 69.905,
+     "delta": 51.415,
+     "gm": 68.0,
+     "mr_equiv": 37.3927
+    }
+   ],
+   "pnl": [
+    {
+     "year": "FY27",
+     "revenue": 127.1581,
+     "incr_rev": 25.9781,
+     "gross_profit": 18.0686,
+     "selling": 0.1202,
+     "new_cash": 0.0,
+     "contribution": 17.9484,
+     "cum_contribution": 17.9484
+    },
+    {
+     "year": "FY28",
+     "revenue": 157.4208,
+     "incr_rev": 56.2408,
+     "gross_profit": 39.1163,
+     "selling": 5.4465,
+     "new_cash": 0.0,
+     "contribution": 33.6699,
+     "cum_contribution": 51.6182
+    },
+    {
+     "year": "FY29",
+     "revenue": 192.5651,
+     "incr_rev": 91.3851,
+     "gross_profit": 63.5583,
+     "selling": 11.6319,
+     "new_cash": 0.0,
+     "contribution": 51.9265,
+     "cum_contribution": 103.5447
+    },
+    {
+     "year": "FY30",
+     "revenue": 233.2649,
+     "incr_rev": 132.0849,
+     "gross_profit": 91.863,
+     "selling": 9.4644,
+     "new_cash": 0.0,
+     "contribution": 82.3986,
+     "cum_contribution": 185.9433
+    },
+    {
+     "year": "FY31",
+     "revenue": 280.2797,
+     "incr_rev": 179.0997,
+     "gross_profit": 124.5585,
+     "selling": 15.8584,
+     "new_cash": 0.7004,
+     "contribution": 108.7001,
+     "cum_contribution": 294.6434
+    }
+   ]
+  },
+  "base": {
+   "fy31": 772.7813,
+   "share": 1.8044,
+   "new_cash": 54.9795,
+   "net_contribution": 577.0775,
+   "cum_gross_profit": 696.7251,
+   "cum_selling": 119.6476,
+   "mr_add": 299.903,
+   "spaces": [
+    {
+     "space": "Beyond-LDL lipid (fibrate + non-statin)",
+     "pool_fy26": 2024.2,
+     "pool_fy31": 3729.4573,
+     "cipla_fy26": 67.16,
+     "share_fy26": 3.3179,
+     "share_fy31": 7.0,
+     "cipla_fy31": 261.062,
+     "delta": 193.902,
+     "gm": 70.0,
+     "mr_equiv": 141.0196
+    },
+    {
+     "space": "Cilnidipine triple-SPC layer",
+     "pool_fy26": 558.0,
+     "pool_fy31": 1028.0788,
+     "cipla_fy26": 2.63,
+     "share_fy26": 0.4713,
+     "share_fy31": 3.0,
+     "cipla_fy31": 30.8424,
+     "delta": 28.2124,
+     "gm": 72.0,
+     "mr_equiv": 20.5181
+    },
+    {
+     "space": "Beta-blocker + ARB FDC",
+     "pool_fy26": 1198.9,
+     "pool_fy31": 2208.8955,
+     "cipla_fy26": 12.9,
+     "share_fy26": 1.076,
+     "share_fy31": 4.0,
+     "cipla_fy31": 88.3558,
+     "delta": 75.4558,
+     "gm": 70.0,
+     "mr_equiv": 54.877
+    },
+    {
+     "space": "Statin + antiplatelet FDC (rosuva only)",
+     "pool_fy26": 2893.7,
+     "pool_fy31": 5331.4547,
+     "cipla_fy26": 18.49,
+     "share_fy26": 0.639,
+     "share_fy31": 2.5,
+     "cipla_fy31": 133.2864,
+     "delta": 114.7964,
+     "gm": 68.0,
+     "mr_equiv": 83.4883
+    }
+   ],
+   "pnl": [
+    {
+     "year": "FY27",
+     "revenue": 150.6239,
+     "incr_rev": 49.4439,
+     "gross_profit": 34.3899,
+     "selling": 4.2502,
+     "new_cash": 0.0,
+     "contribution": 30.1397,
+     "cum_contribution": 30.1397
+    },
+    {
+     "year": "FY28",
+     "revenue": 211.3836,
+     "incr_rev": 110.2036,
+     "gross_profit": 76.6487,
+     "selling": 14.9439,
+     "new_cash": 0.0,
+     "contribution": 61.7048,
+     "cum_contribution": 91.8445
+    },
+    {
+     "year": "FY29",
+     "revenue": 285.5655,
+     "incr_rev": 184.3855,
+     "gross_profit": 128.2412,
+     "selling": 27.9999,
+     "new_cash": 12.8419,
+     "contribution": 100.2413,
+     "cum_contribution": 192.0858
+    },
+    {
+     "year": "FY30",
+     "revenue": 375.6326,
+     "incr_rev": 274.4526,
+     "gross_profit": 190.88,
+     "selling": 28.8264,
+     "new_cash": 13.6684,
+     "contribution": 162.0536,
+     "cum_contribution": 354.1394
+    },
+    {
+     "year": "FY31",
+     "revenue": 484.4613,
+     "incr_rev": 383.2813,
+     "gross_profit": 266.5652,
+     "selling": 43.6271,
+     "new_cash": 28.4691,
+     "contribution": 222.9381,
+     "cum_contribution": 577.0775
+    }
+   ]
+  },
+  "bull": {
+   "fy31": 1033.4512,
+   "share": 2.1168,
+   "new_cash": 143.8095,
+   "net_contribution": 922.1173,
+   "cum_gross_profit": 1135.2424,
+   "cum_selling": 213.125,
+   "mr_add": 502.7437,
+   "spaces": [
+    {
+     "space": "Beyond-LDL lipid (fibrate + non-statin)",
+     "pool_fy26": 2024.2,
+     "pool_fy31": 4251.5116,
+     "cipla_fy26": 67.16,
+     "share_fy26": 3.3179,
+     "share_fy31": 9.0,
+     "cipla_fy31": 382.636,
+     "delta": 315.476,
+     "gm": 70.0,
+     "mr_equiv": 229.4371
+    },
+    {
+     "space": "Cilnidipine triple-SPC layer",
+     "pool_fy26": 558.0,
+     "pool_fy31": 1171.9906,
+     "cipla_fy26": 2.63,
+     "share_fy26": 0.4713,
+     "share_fy31": 5.0,
+     "cipla_fy31": 58.5995,
+     "delta": 55.9695,
+     "gm": 72.0,
+     "mr_equiv": 40.7051
+    },
+    {
+     "space": "Beta-blocker + ARB FDC",
+     "pool_fy26": 1198.9,
+     "pool_fy31": 2518.0996,
+     "cipla_fy26": 12.9,
+     "share_fy26": 1.076,
+     "share_fy31": 5.5,
+     "cipla_fy31": 138.4955,
+     "delta": 125.5955,
+     "gm": 70.0,
+     "mr_equiv": 91.3422
+    },
+    {
+     "space": "Statin + antiplatelet FDC (rosuva only)",
+     "pool_fy26": 2893.7,
+     "pool_fy31": 6077.7587,
+     "cipla_fy26": 18.49,
+     "share_fy26": 0.639,
+     "share_fy31": 3.5,
+     "cipla_fy31": 212.7216,
+     "delta": 194.2316,
+     "gm": 68.0,
+     "mr_equiv": 141.2593
+    }
+   ],
+   "pnl": [
+    {
+     "year": "FY27",
+     "revenue": 175.8135,
+     "incr_rev": 74.6335,
+     "gross_profit": 51.9258,
+     "selling": 8.6836,
+     "new_cash": 0.0,
+     "contribution": 43.2422,
+     "cum_contribution": 43.2422
+    },
+    {
+     "year": "FY28",
+     "revenue": 271.9974,
+     "incr_rev": 170.8174,
+     "gross_profit": 118.8433,
+     "selling": 25.6119,
+     "new_cash": 10.4539,
+     "contribution": 93.2314,
+     "cum_contribution": 136.4736
+    },
+    {
+     "year": "FY29",
+     "revenue": 394.7171,
+     "incr_rev": 293.5371,
+     "gross_profit": 204.2207,
+     "selling": 47.2106,
+     "new_cash": 32.0526,
+     "contribution": 157.0101,
+     "cum_contribution": 293.4837
+    },
+    {
+     "year": "FY30",
+     "revenue": 550.002,
+     "incr_rev": 448.822,
+     "gross_profit": 312.2519,
+     "selling": 52.5407,
+     "new_cash": 37.3827,
+     "contribution": 259.7113,
+     "cum_contribution": 553.195
+    },
+    {
+     "year": "FY31",
+     "revenue": 745.1312,
+     "incr_rev": 643.9512,
+     "gross_profit": 448.0006,
+     "selling": 79.0782,
+     "new_cash": 63.9202,
+     "contribution": 368.9224,
+     "cum_contribution": 922.1173
+    }
+   ]
+  }
+ },
+ "sensitivity": {
+  "rides": [
+   0.4,
+   0.5,
+   0.6,
+   0.7,
+   0.8
+  ],
+  "grid": [
+   {
+    "redeploy": 0.25,
+    "values": [
+     136.9188,
+     109.3357,
+     85.0814,
+     61.1133,
+     39.9267
+    ]
+   },
+   {
+    "redeploy": 0.5,
+    "values": [
+     102.7016,
+     78.7335,
+     54.9795,
+     36.0846,
+     18.0549
+    ]
+   },
+   {
+    "redeploy": 0.75,
+    "values": [
+     72.3856,
+     51.1374,
+     32.2425,
+     14.9382,
+     7.3252
+    ]
+   }
+  ]
+ }
+}

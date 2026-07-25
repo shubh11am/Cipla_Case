@@ -1,0 +1,32 @@
+{
+ "market": {
+  "mat_t0": 18471.5193,
+  "mat_t1": 20516.7439,
+  "mat_t2": 23244.4795,
+  "value_growth": 13.2952,
+  "real_growth": 6.2626,
+  "price_growth": 6.6181,
+  "volume_growth": 5.1363,
+  "cagr_2y": 12.1782
+ },
+ "cipla": {
+  "mat_t0": 360.2234,
+  "mat_t1": 372.3711,
+  "mat_t2": 389.4944,
+  "share_t0": 1.9502,
+  "share_t1": 1.815,
+  "share_t2": 1.6756,
+  "value_growth": 4.5985,
+  "real_growth": -2.6751,
+  "price_growth": 7.4735,
+  "volume_growth": -3.739,
+  "rank": 19,
+  "n_brands": 68
+ },
+ "meta": {
+  "company": "CIPLA*",
+  "market_label": "India Cardiac (IQVIA-style secondary sales, MAT Feb'26)",
+  "objective": "Identify and rank opportunity spaces inside the Indian Cardiac market that are most likely to OUTPERFORM the total cardiac market over the next 3-5 years AND in which Cipla has a defensible right to win.",
+  "rows": 7452
+ }
+}
