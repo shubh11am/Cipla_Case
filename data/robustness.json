@@ -1,0 +1,291 @@
+{
+ "weights": {
+  "draws": 5000,
+  "identical_shortlist_pct": 100.0,
+  "weight_free_screens": [
+   "S1_MATERIALITY",
+   "S2_REAL_DEMAND",
+   "S4_DURABILITY",
+   "S5_CAPABILITY"
+  ],
+  "per_space": [
+   {
+    "id": "AHT_CILNIDIPINE",
+    "label": "Cilnidipine-anchored antihypertensive platform",
+    "pass_pct": 100.0,
+    "top5_pct": 66.7,
+    "baseline_pass": true
+   },
+   {
+    "id": "AHT_TELMI_CORE",
+    "label": "Telmisartan core franchise (plain, +amlodipine, +diuretic)",
+    "pass_pct": 0.0,
+    "top5_pct": 60.2,
+    "baseline_pass": false
+   },
+   {
+    "id": "LIPID_SECPREV",
+    "label": "Statin + antiplatelet fixed-dose (post-event secondary prevention)",
+    "pass_pct": 100.0,
+    "top5_pct": 82.8,
+    "baseline_pass": true
+   },
+   {
+    "id": "AHT_BB_ARB",
+    "label": "Beta-blocker + ARB fixed-dose combinations",
+    "pass_pct": 100.0,
+    "top5_pct": 71.1,
+    "baseline_pass": true
+   },
+   {
+    "id": "LIPID_NONSTATIN",
+    "label": "Non-statin / residual-risk lipid (ezetimibe, bempedoic, saroglitazar, PCSK9)",
+    "pass_pct": 100.0,
+    "top5_pct": 42.9,
+    "baseline_pass": true
+   },
+   {
+    "id": "LIPID_FIBRATE_TG",
+    "label": "Fibrate & statin+fibrate (triglyceride / residual-risk lipid)",
+    "pass_pct": 100.0,
+    "top5_pct": 59.1,
+    "baseline_pass": true
+   },
+   {
+    "id": "LIPID_STATIN_CORE",
+    "label": "Core statins (atorvastatin, rosuvastatin plain)",
+    "pass_pct": 0.0,
+    "top5_pct": 12.8,
+    "baseline_pass": false
+   },
+   {
+    "id": "AHT_OTHER",
+    "label": "Other antihypertensives (alpha-blockers, olmesartan, misc.)",
+    "pass_pct": 0.0,
+    "top5_pct": 19.9,
+    "baseline_pass": false
+   },
+   {
+    "id": "AHT_TRIPLE_SPC",
+    "label": "Triple / poly antihypertensive single-pill combinations",
+    "pass_pct": 0.0,
+    "top5_pct": 32.0,
+    "baseline_pass": false
+   },
+   {
+    "id": "AHT_LEGACY",
+    "label": "Legacy antihypertensives (atenolol/amlodipine, losartan, ACEi, S-amlodipine)",
+    "pass_pct": 0.0,
+    "top5_pct": 45.6,
+    "baseline_pass": false
+   },
+   {
+    "id": "ANGINA_ANTIISCHEMIC",
+    "label": "Chronic angina / anti-ischaemic (nicorandil, nitrates, ranolazine)",
+    "pass_pct": 0.0,
+    "top5_pct": 7.0,
+    "baseline_pass": false
+   }
+  ]
+ },
+ "baselines": {
+  "spaces": 11,
+  "picked": 5,
+  "that_beat_market": 6,
+  "market_real_growth": 6.26,
+  "agent_hits": 5,
+  "agent_precision": 100.0,
+  "naive_value_growth_hits": 5,
+  "naive_value_growth_precision": 100.0,
+  "naive_value_growth_picks": [
+   "Non-statin / residual-risk lipid (ezetimibe, bempedoic, saroglitazar, PCSK9)",
+   "Cilnidipine-anchored antihypertensive platform",
+   "Beta-blocker + ARB fixed-dose combinations",
+   "Statin + antiplatelet fixed-dose (post-event secondary prevention)",
+   "Fibrate & statin+fibrate (triglyceride / residual-risk lipid)"
+  ],
+  "score_only_hits": 4,
+  "score_only_precision": 80.0,
+  "score_only_picks": [
+   "Cilnidipine-anchored antihypertensive platform",
+   "Telmisartan core franchise (plain, +amlodipine, +diuretic)",
+   "Statin + antiplatelet fixed-dose (post-event secondary prevention)",
+   "Beta-blocker + ARB fixed-dose combinations",
+   "Fibrate & statin+fibrate (triglyceride / residual-risk lipid)"
+  ],
+  "score_only_misses": [
+   "Telmisartan core franchise (plain, +amlodipine, +diuretic)"
+  ],
+  "naive_size_hits": 3,
+  "naive_size_precision": 60.0,
+  "random_mean_hits": 2.72,
+  "random_mean_precision": 54.4,
+  "random_pct_matching_agent": 1.28
+ },
+ "leave_one_out": {
+  "signals_tested": 14,
+  "unchanged": 12,
+  "changed": [
+   {
+    "removed": "DPCO_NLEM_CEILING",
+    "shortlist_changed": true,
+    "added": [
+     "LIPID_STATIN_CORE"
+    ],
+    "dropped": []
+   },
+   {
+    "removed": "PATENT_CLIFF_LEGACY_NONE",
+    "shortlist_changed": true,
+    "added": [
+     "LIPID_STATIN_CORE"
+    ],
+    "dropped": []
+   }
+  ]
+ },
+ "bridge": {
+  "fy26_total": 389.5,
+  "increments": [
+   {
+    "space": "Beyond-LDL lipid (fibrate + non-statin)",
+    "key": "BEYOND_LDL",
+    "delta": 193.9,
+    "share_fy26": 3.32,
+    "share_fy31": 7.0,
+    "pool_fy31": 3729.0
+   },
+   {
+    "space": "Cilnidipine triple-SPC layer",
+    "key": "CILN_TRIPLE",
+    "delta": 28.2,
+    "share_fy26": 0.47,
+    "share_fy31": 3.0,
+    "pool_fy31": 1028.0
+   },
+   {
+    "space": "Beta-blocker + ARB FDC",
+    "key": "BB_ARB",
+    "delta": 75.5,
+    "share_fy26": 1.08,
+    "share_fy31": 4.0,
+    "pool_fy31": 2209.0
+   },
+   {
+    "space": "Statin + antiplatelet FDC (rosuva only)",
+    "key": "SECPREV",
+    "delta": 114.8,
+    "share_fy26": 0.64,
+    "share_fy31": 2.5,
+    "pool_fy31": 5331.0
+   }
+  ],
+  "fy31_total": 772.8,
+  "cum_gross_profit": 696.7,
+  "cum_selling": 119.6,
+  "net_contribution": 577.1,
+  "new_cash": 55.0,
+  "funded_by_redeploy": 64.7,
+  "legacy_sell_per_year": 30.3,
+  "redeployable_per_year": 15.2,
+  "gm_blend": 69.7,
+  "incr_sell_pct": 11.9,
+  "mr_add": 300.0,
+  "pnl": [
+   {
+    "year": "FY27",
+    "revenue": 150.6,
+    "incr_rev": 49.4,
+    "gross_profit": 34.4,
+    "selling": 4.3,
+    "new_cash": 0.0,
+    "contribution": 30.1,
+    "cum_contribution": 30.1
+   },
+   {
+    "year": "FY28",
+    "revenue": 211.4,
+    "incr_rev": 110.2,
+    "gross_profit": 76.6,
+    "selling": 14.9,
+    "new_cash": 0.0,
+    "contribution": 61.7,
+    "cum_contribution": 91.8
+   },
+   {
+    "year": "FY29",
+    "revenue": 285.6,
+    "incr_rev": 184.4,
+    "gross_profit": 128.2,
+    "selling": 28.0,
+    "new_cash": 12.8,
+    "contribution": 100.2,
+    "cum_contribution": 192.1
+   },
+   {
+    "year": "FY30",
+    "revenue": 375.6,
+    "incr_rev": 274.5,
+    "gross_profit": 190.9,
+    "selling": 28.8,
+    "new_cash": 13.7,
+    "contribution": 162.1,
+    "cum_contribution": 354.1
+   },
+   {
+    "year": "FY31",
+    "revenue": 484.5,
+    "incr_rev": 383.3,
+    "gross_profit": 266.6,
+    "selling": 43.6,
+    "new_cash": 28.5,
+    "contribution": 222.9,
+    "cum_contribution": 577.1
+   }
+  ]
+ },
+ "competitive": [
+  {
+   "space": "Beyond-LDL lipid",
+   "key": "BEYOND_LDL",
+   "pool_fy26": 2024,
+   "pool_fy31": 3729,
+   "pool_growth": 1705,
+   "leader": "ZYDUS CADILA*",
+   "leader_share": 21.9,
+   "cipla_now": 67.2,
+   "cipla_share_now": 3.32,
+   "cipla_target_share": 7.0,
+   "cipla_target_val": 261,
+   "target_as_pct_of_pool_growth": 15.3
+  },
+  {
+   "space": "Cilnidipine triple SPC",
+   "key": "CILN_TRIPLE",
+   "pool_fy26": 558,
+   "pool_fy31": 1028,
+   "pool_growth": 470,
+   "leader": "AJANTA PHARMA",
+   "leader_share": 12.1,
+   "cipla_now": 2.6,
+   "cipla_share_now": 0.47,
+   "cipla_target_share": 3.0,
+   "cipla_target_val": 31,
+   "target_as_pct_of_pool_growth": 6.6
+  },
+  {
+   "space": "BB + ARB FDC",
+   "key": "BB_ARB",
+   "pool_fy26": 1199,
+   "pool_fy31": 2209,
+   "pool_growth": 1010,
+   "leader": "SUN*",
+   "leader_share": 19.8,
+   "cipla_now": 12.9,
+   "cipla_share_now": 1.08,
+   "cipla_target_share": 4.0,
+   "cipla_target_val": 88,
+   "target_as_pct_of_pool_growth": 8.7
+  }
+ ]
+}

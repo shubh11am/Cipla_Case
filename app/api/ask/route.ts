@@ -32,6 +32,18 @@ Field meanings that matter:
 - adjacency     : 0–1, how close the space is to a franchise Cipla already wins in
 - passes/failed : whether it cleared the five screens, and which it failed
                   (S1 materiality, S2 real demand, S3 winnability, S4 durability, S5 capability)
+- weight_stability_pct : share of 5,000 random weight vectors in which that space still clears all five screens
+
+A separate "robustness" object is also supplied. Use it whenever the question is about whether the model can be trusted:
+- robustness.weights          : the weight Monte Carlo. weight_free_screens are the screens that run on raw metrics and therefore cannot move with the weights at all
+- robustness.blind_backtest_precision : the agent's blind precision against four comparator models — random selection, rank by pool size, composite score with the screens removed, and rank by value growth
+- robustness.leave_one_signal_out : how many of the external signals can be deleted individually with no change to the shortlist
+- robustness.financial_bridge : how FY26 revenue becomes FY31 revenue, and how gross profit becomes net contribution and the residual new cash
+- robustness.competitive_response : each target expressed as a share of that pool's own growth, so it can be compared against the incumbent's position
+
+Two things to be careful about, because they are easy to state wrongly:
+- Ranking by value growth also scored 100% on the blind test. Do not claim the agent beat it. The correct claim is that removing the five screens drops precision from 100% to 80%, and the space it then wrongly adds is telmisartan core.
+- The one false negative in the backtest is core statins, missed by roughly a tenth of a point.
 
 Answer in 3–6 tight sentences. Lead with the answer, then the evidence. Use plain language — the reader may not know pharma. Do not use markdown headers or bullet lists; write prose.`;
 
@@ -93,13 +105,15 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { question, spaces } = await req.json();
+    const { question, spaces, robustness } = await req.json();
     if (typeof question !== "string" || !question.trim()) {
       return NextResponse.json({ error: "No question provided." }, { status: 400 });
     }
 
     const prompt =
-      `AGENT OUTPUT (current weights)\n${JSON.stringify(spaces, null, 1)}\n\nQUESTION: ${question}`;
+      `AGENT OUTPUT (current weights)\n${JSON.stringify(spaces, null, 1)}\n\n` +
+      (robustness ? `ROBUSTNESS\n${JSON.stringify(robustness, null, 1)}\n\n` : "") +
+      `QUESTION: ${question}`;
 
     const answer = provider === "gemini" ? await askGemini(prompt) : await askClaude(prompt);
     return NextResponse.json({ answer: answer || "No answer returned.", provider });

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Matrix from "@/components/Matrix";
 import SpaceDetail from "@/components/SpaceDetail";
+import { RobustnessCards, Bridges, YearByYear, CompetitiveResponse } from "@/components/Robustness";
 import { scoreAll, fmtCr, pct, type Space, type PillarWeights, type SubWeights } from "@/lib/score";
 
 import spacesRaw from "@/data/spaces.json";
@@ -10,8 +11,13 @@ import model from "@/data/model.json";
 import market from "@/data/market.json";
 import backtest from "@/data/backtest.json";
 import bcase from "@/data/business_case.json";
+import rob from "@/data/robustness.json";
 
 const SPACES = spacesRaw as unknown as Space[];
+// share of 5,000 random weight vectors in which each space still clears all five screens
+const STABILITY: Record<string, number> = Object.fromEntries(
+  rob.weights.per_space.map((r) => [r.id, r.pass_pct]),
+);
 const DEFAULTS = model.pillar_weights as PillarWeights;
 const SUB = model.sub_weights as unknown as SubWeights;
 const MKT = market.market as Record<string, number>;
@@ -122,8 +128,11 @@ export default function Page() {
                 <div className="note teal" style={{ marginTop: 12 }}>
                   <b>{shortlist.length} of {scored.length}</b> spaces clear all five screens.
                   {changed
-                    ? " Note the shortlist barely moves — the answer is not an artefact of the weights."
+                    ? " The ordering moved; the shortlist did not."
                     : " These are the weights used in the deck and the backtest."}
+                  {" "}Four of the five screens run on raw metrics rather than scores, so across{" "}
+                  {rob.weights.draws.toLocaleString()} random weight vectors the shortlist was
+                  identical in <b>{rob.weights.identical_shortlist_pct}%</b> of draws.
                 </div>
               </div>
             </div>
@@ -136,6 +145,9 @@ export default function Page() {
                     <th className="num">Pool</th><th className="num">Value g</th>
                     <th className="num">REAL g</th><th className="num">Volume</th>
                     <th className="num">Cipla</th><th className="num">Score</th>
+                    <th className="num" title="Share of 5,000 random weight vectors in which this space still clears all five screens">
+                      Stability
+                    </th>
                     <th>Verdict</th>
                   </tr>
                 </thead>
@@ -153,6 +165,12 @@ export default function Page() {
                       <td className="num">{pct(s.volume_growth)}</td>
                       <td className="num">{s.cipla_share.toFixed(2)}%</td>
                       <td className="num" style={{ fontWeight: 700 }}>{s.opportunity_score.toFixed(1)}</td>
+                      <td className="num" style={{
+                        color: STABILITY[s.id] >= 50 ? "var(--teal)" : "var(--muted)",
+                        fontWeight: STABILITY[s.id] >= 50 ? 600 : 400,
+                      }}>
+                        {STABILITY[s.id] ?? 0}%
+                      </td>
                       <td>
                         {s.passes
                           ? <span className={"pill " + actionClass(s.action)}>{s.action}</span>
@@ -168,6 +186,11 @@ export default function Page() {
                 REAL growth is green when it beats the market&apos;s {MKT.real_growth.toFixed(1)}% — screen S2.
                 Note rank 2: the market&apos;s largest pool scores near the top and is still rejected,
                 because its growth is price rather than patients. Score ranks; screens decide.
+                <br />
+                <b>Stability</b> is the share of {rob.weights.draws.toLocaleString()} random weight
+                vectors in which that space still clears all five screens — 100% or 0% for every
+                space, with nothing in between. Moving the sliders changes the ordering, never the
+                membership.
               </p>
             </div>
 
@@ -194,8 +217,8 @@ export default function Page() {
                  "rejected space that also beat it — the one false negative", "var(--red)"],
                 [`${(backtest.summary.shortlist_real - backtest.summary.rejected_real).toFixed(1)} pts`,
                  "real-growth spread, picked vs rejected", "var(--ink)"],
-                [`${backtest.summary_signals_off.shortlisted_beat} of ${backtest.summary_signals_off.shortlisted} · ${backtest.summary_signals_off.rejected_beat} of ${backtest.summary_signals_off.rejected}`,
-                 "with the signal layer off — the variant carrying no hindsight", "var(--ink)"],
+                [`${rob.baselines.score_only_precision}% → ${rob.baselines.agent_precision}%`,
+                 "precision without, then with, the five screens", "var(--ink)"],
               ].map(([big, small, c]) => (
                 <div className="card" key={small as string}>
                   <div style={{ fontSize: 26, fontWeight: 700, color: c as string }}>{big}</div>
@@ -236,10 +259,16 @@ export default function Page() {
                 the market. The one false negative is core statins — rejected on durability, then grew
                 6.4% real against a 6.3% market, a miss by a tenth of a point on a space the
                 recommendation says to defend rather than fund. The signal layer was curated with FY26
-                known, so the layer-off variant is shown alongside: it carries no hindsight and
-                separates just as cleanly.
+                known, so the variant carrying no hindsight is worth stating too: with the layer
+                switched off entirely the agent goes{" "}
+                {backtest.summary_signals_off.shortlisted_beat} of {backtest.summary_signals_off.shortlisted}{" "}
+                on its picks and {backtest.summary_signals_off.rejected_beat} of{" "}
+                {backtest.summary_signals_off.rejected} on its rejections — it separates just as
+                cleanly without any external input at all.
               </div>
             </div>
+
+            <RobustnessCards />
           </section>
         )}
 
@@ -351,6 +380,10 @@ export default function Page() {
                 </p>
               </div>
             </div>
+
+            <Bridges />
+            <YearByYear />
+            <CompetitiveResponse />
           </section>
         )}
 
@@ -384,6 +417,8 @@ function Ask({ scored }: { scored: ReturnType<typeof scoreAll> }) {
     "Why is telmisartan core rejected when it is the biggest pool?",
     "Where is Cipla's right to win strongest, and why?",
     "If I could only fund one space, which and why?",
+    "How do I know the answer isn't just an artefact of your weights?",
+    "What happens to the shortlist if I delete the external signals?",
   ];
 
   async function ask(question: string) {
@@ -404,7 +439,19 @@ function Ask({ scored }: { scored: ReturnType<typeof scoreAll> }) {
             leader: s.leader, leader_share: s.leader_share,
             score: Number(s.opportunity_score.toFixed(1)),
             passes: s.passes, failed: s.failed, action: s.action,
+            weight_stability_pct: STABILITY[s.id] ?? 0,
           })),
+          robustness: {
+            weights: {
+              draws: rob.weights.draws,
+              identical_shortlist_pct: rob.weights.identical_shortlist_pct,
+              weight_free_screens: rob.weights.weight_free_screens,
+            },
+            blind_backtest_precision: rob.baselines,
+            leave_one_signal_out: rob.leave_one_out,
+            financial_bridge: rob.bridge,
+            competitive_response: rob.competitive,
+          },
         }),
       });
       const j = await res.json();
