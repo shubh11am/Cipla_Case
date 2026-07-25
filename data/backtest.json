@@ -107,7 +107,19 @@
   "shortlisted_beat": 5,
   "rejected": 6,
   "rejected_beat": 1,
+  "false_negatives": [
+   "Core statins (atorvastatin, rosuvastatin plain)"
+  ],
   "shortlist_real": 13.0329,
   "rejected_real": 2.6439
+ },
+ "summary_signals_off": {
+  "shortlisted": 6,
+  "shortlisted_beat": 6,
+  "rejected": 5,
+  "rejected_beat": 0,
+  "false_negatives": [],
+  "shortlist_real": 11.3157,
+  "rejected_real": 1.773
  }
 }

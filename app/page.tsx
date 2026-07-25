@@ -189,12 +189,13 @@ export default function Page() {
             <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(190px,1fr))" }}>
               {[
                 [`${backtest.summary.shortlisted_beat} of ${backtest.summary.shortlisted}`,
-                 "picked spaces that beat the market on real growth", "var(--teal)"],
+                 "of the spaces it picked beat the market on real growth", "var(--teal)"],
                 [`${backtest.summary.rejected_beat} of ${backtest.summary.rejected}`,
-                 "rejected spaces that beat the market", "var(--red)"],
+                 "rejected space that also beat it — the one false negative", "var(--red)"],
                 [`${(backtest.summary.shortlist_real - backtest.summary.rejected_real).toFixed(1)} pts`,
                  "real-growth spread, picked vs rejected", "var(--ink)"],
-                ["unchanged", "with the external-signal layer switched off", "var(--ink)"],
+                [`${backtest.summary_signals_off.shortlisted_beat} of ${backtest.summary_signals_off.shortlisted} · ${backtest.summary_signals_off.rejected_beat} of ${backtest.summary_signals_off.rejected}`,
+                 "with the signal layer off — the variant carrying no hindsight", "var(--ink)"],
               ].map(([big, small, c]) => (
                 <div className="card" key={small as string}>
                   <div style={{ fontSize: 26, fontWeight: 700, color: c as string }}>{big}</div>
@@ -231,9 +232,12 @@ export default function Page() {
                 </tbody>
               </table>
               <div className="note" style={{ marginTop: 12 }}>
-                <b>Honest caveat.</b> With the full external-signal layer active, precision stays at
-                100% but core statins becomes one marginal false negative — 6.4% real growth against
-                a 6.3% market. Volunteering that reads as rigour; being caught on it does not.
+                <b>Precision is 100% either way.</b> Every space the agent picked went on to beat
+                the market. The one false negative is core statins — rejected on durability, then grew
+                6.4% real against a 6.3% market, a miss by a tenth of a point on a space the
+                recommendation says to defend rather than fund. The signal layer was curated with FY26
+                known, so the layer-off variant is shown alongside: it carries no hindsight and
+                separates just as cleanly.
               </div>
             </div>
           </section>
