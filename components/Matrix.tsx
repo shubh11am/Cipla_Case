@@ -1,6 +1,12 @@
 "use client";
 
 import type { Scored } from "@/lib/score";
+import model from "@/data/model.json";
+
+// The dividers are the action-band thresholds themselves, not the midpoint of whatever
+// happens to be plotted — so the quadrants you read off the chart are the quadrants the
+// model actually applies, and they stay put as the weights move.
+const BAND = model.action_bands.double_down;
 
 /**
  * The 2×2 the agent computes but a static deck can only print once: attractiveness
@@ -18,15 +24,18 @@ export default function Matrix({
 
   const xs = spaces.map((s) => s.rtw_axis);
   const ys = spaces.map((s) => s.attractiveness_axis);
-  const xMin = Math.min(...xs) - 7, xMax = Math.max(...xs) + 7;
-  const yMin = Math.min(...ys) - 5, yMax = Math.max(...ys) + 5;
+  // keep both thresholds inside the plotted range so the quadrants are always visible
+  const xMin = Math.min(...xs, BAND.min_rtw) - 7, xMax = Math.max(...xs, BAND.min_rtw) + 7;
+  const yMin = Math.min(...ys, BAND.min_attractiveness) - 5, yMax = Math.max(...ys, BAND.min_attractiveness) + 5;
   const maxPool = Math.max(...spaces.map((s) => s.mat_t2));
 
   const mx = (v: number) => px0 + ((v - xMin) / (xMax - xMin)) * (px1 - px0);
   const my = (v: number) => py1 - ((v - yMin) / (yMax - yMin)) * (py1 - py0);
   const rr = (pool: number) => 9 + 19 * Math.sqrt(pool / maxPool);
 
-  const midX = mx((xMin + xMax) / 2), midY = my((yMin + yMax) / 2);
+  const midX = mx(BAND.min_rtw), midY = my(BAND.min_attractiveness);
+  const count = (a: string) => spaces.filter((s) => s.action === a).length;
+  const nBuild = count("BUILD CAPABILITY");
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto", display: "block" }}
@@ -40,6 +49,28 @@ export default function Matrix({
       <text x={px1} y={H - 8} fontSize="9.5" fontWeight="700" fill="#8b95a3"
             textAnchor="end" letterSpacing="0.6">
         CIPLA&apos;S RIGHT TO WIN →
+      </text>
+
+      {/* The four action bands, named where they fall. Top-left is the one worth seeing:
+          attractive spaces where Cipla has no right to win — normally empty. */}
+      <text x={px0 + 6} y={py0 + 14} fontSize="9.5" fontWeight="700" fill="#c9d2dc" letterSpacing="0.7">
+        BUILD CAPABILITY
+      </text>
+      {nBuild === 0 && (
+        <text x={px0 + 6} y={py0 + 27} fontSize="9" fontStyle="italic" fill="#c9d2dc">
+          empty — nothing lands here
+        </text>
+      )}
+      <text x={px1 - 6} y={py0 + 14} fontSize="9.5" fontWeight="700" fill="#c9d2dc"
+            textAnchor="end" letterSpacing="0.7">
+        DOUBLE DOWN · {count("DOUBLE DOWN")}
+      </text>
+      <text x={px0 + 6} y={py1 - 8} fontSize="9.5" fontWeight="700" fill="#c9d2dc" letterSpacing="0.7">
+        AVOID · {count("AVOID")}
+      </text>
+      <text x={px1 - 6} y={py1 - 8} fontSize="9.5" fontWeight="700" fill="#c9d2dc"
+            textAnchor="end" letterSpacing="0.7">
+        SELECTIVE / HARVEST · {count("SELECTIVE / HARVEST")}
       </text>
 
 

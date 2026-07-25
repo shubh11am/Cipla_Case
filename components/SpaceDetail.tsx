@@ -16,8 +16,8 @@ export default function SpaceDetail({ s, pillars }: { s: Scored; pillars: Pillar
   const pillarRows: [string, number, number][] = [
     ["Market attractiveness", s.market_attractiveness, pillars.market_attractiveness],
     ["Future potential", s.future_potential, pillars.future_potential],
-    ["Competitive headroom", s.competitive_headroom, pillars.competitive_headroom],
-    ["Right to win", s.right_to_win, pillars.right_to_win],
+    ["Competitive intensity", s.competitive_headroom, pillars.competitive_headroom],
+    ["Right to win · strategic fit", s.right_to_win, pillars.right_to_win],
   ];
 
   return (

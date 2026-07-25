@@ -93,7 +93,8 @@ export default function Page() {
           <section>
             <div className="h2">11 opportunity spaces, ranked</div>
             <p className="sub">
-              Bubbles are sized by pool. Green cleared all five screens; grey was rejected.
+              The chart is the core trade-off: market attractiveness against Cipla&apos;s right to
+              win, bubble sized by pool. Green cleared all five screens; grey was rejected.
               Click any bubble or row for the full audit trail — pillar scores, screens, and every
               external signal with its source.
             </p>
@@ -112,8 +113,8 @@ export default function Page() {
                 {([
                   ["market_attractiveness", "Market attractiveness"],
                   ["future_potential", "Future potential"],
-                  ["competitive_headroom", "Competitive headroom"],
-                  ["right_to_win", "Right to win"],
+                  ["competitive_headroom", "Competitive intensity"],
+                  ["right_to_win", "Right to win · strategic fit"],
                 ] as [keyof PillarWeights, string][]).map(([k, label]) => (
                   <div className="slider" key={k}>
                     <label>{label}<b>{(norm[k] * 100).toFixed(0)}%</b></label>
@@ -184,8 +185,12 @@ export default function Page() {
               </table>
               <p style={{ fontSize: 11, color: "var(--muted)", marginBottom: 0, marginTop: 10 }}>
                 REAL growth is green when it beats the market&apos;s {MKT.real_growth.toFixed(1)}% — screen S2.
-                Note rank 2: the market&apos;s largest pool scores near the top and is still rejected,
-                because its growth is price rather than patients. Score ranks; screens decide.
+                <b> The three trade-offs, resolved:</b> <i>size vs real growth</i> — rank 2 is the
+                market&apos;s largest pool and is still rejected, because its growth is price rather
+                than patients; <i>growth vs competition</i> — cilnidipine grows 21.5% but Torrent
+                holds 55% of the plain molecule, so the entry point is the triple-SPC layer;
+                <i> attractiveness vs right to win</i> — non-statin clears on adjacency 0.98, not on
+                incumbency. Score ranks; screens decide.
                 <br />
                 <b>Stability</b> is the share of {rob.weights.draws.toLocaleString()} random weight
                 vectors in which that space still clears all five screens — 100% or 0% for every
