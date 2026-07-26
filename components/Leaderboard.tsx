@@ -23,13 +23,21 @@ const actionClass = (a: string) =>
   a === "DOUBLE DOWN" ? "dd" : a === "BUILD CAPABILITY" ? "build"
   : a === "SELECTIVE / HARVEST" ? "sel" : "avoid";
 
+const GATE_SHORT: Record<string, string> = {
+  S1_MATERIALITY: "S1 pool size", S1_GROWTH_POOL: "S1 growth pool",
+  S2_REAL_DEMAND: "S2 market benchmark", S3_WINNABILITY: "S3 winnability",
+  S4_DURABILITY: "S4 durability", S5_CAPABILITY: "S5 capability",
+};
+
 export default function Leaderboard({
-  scored, baseRank, marketReal, stability, selected, onSelect,
+  scored, baseRank, marketReal, stability, binding, jitter, selected, onSelect,
 }: {
   scored: Scored[];
   baseRank: Record<string, number>;
   marketReal: number;
   stability: Record<string, number>;
+  binding: Record<string, { gate: string; move: number }>;
+  jitter: number;
   selected: string | null;
   onSelect: (id: string) => void;
 }) {
@@ -42,8 +50,10 @@ export default function Leaderboard({
         <h3>Eleven spaces, ranked live</h3>
         <p className="cap" style={{ margin: 0 }}>
           The bar is REAL growth; the tick is the market&apos;s {marketReal.toFixed(1)}%. Move a
-          weight and the arrow shows how far each space travelled from its shipped rank —
-          the ordering is sensitive, the membership is not.
+          weight and the arrow shows how far each space travelled from its shipped rank.
+          The weights cannot change <i>membership</i> — no screen reads the weighted score —
+          so <b>Resilience</b> measures the thing that can: every gate jittered ±{jitter}%,
+          5,000 times, and the share of runs where this verdict held.
         </p>
       </div>
       <div className="scroll-x">
@@ -56,8 +66,11 @@ export default function Leaderboard({
               <th style={{ width: 118 }}>REAL growth</th>
               <th className="num">Cipla</th>
               <th className="num">Score</th>
-              <th className="num" title="Share of 5,000 random weight vectors in which this space still clears all five screens">
-                Stability
+              <th className="num" title={`Share of 5,000 runs with every screen threshold jittered ±${jitter}% in which this space keeps its verdict`}>
+                Resilience
+              </th>
+              <th title="The gate this space sits closest to, and how far it would have to move to flip the verdict">
+                Binding gate
               </th>
               <th>Verdict</th>
             </tr>
@@ -94,10 +107,16 @@ export default function Leaderboard({
                     {s.opportunity_score.toFixed(1)}
                   </td>
                   <td className="num" style={{
-                    color: (stability[s.id] ?? 0) >= 50 ? "var(--teal)" : "var(--faint)",
-                    fontWeight: (stability[s.id] ?? 0) >= 50 ? 600 : 400,
+                    color: (stability[s.id] ?? 0) >= 90 ? "var(--teal)"
+                         : (stability[s.id] ?? 0) >= 40 ? "var(--amber)" : "var(--faint)",
+                    fontWeight: (stability[s.id] ?? 0) >= 40 ? 600 : 400,
                   }}>
                     {stability[s.id] ?? 0}%
+                  </td>
+                  <td style={{ fontSize: 11, color: "var(--muted)", whiteSpace: "nowrap" }}>
+                    {binding[s.id]
+                      ? `${GATE_SHORT[binding[s.id].gate] ?? binding[s.id].gate} · ${binding[s.id].move.toFixed(0)}%`
+                      : "—"}
                   </td>
                   <td>
                     {s.passes

@@ -22,8 +22,14 @@ const DEFAULTS = model.pillar_weights as PillarWeights;
 const SUB = model.sub_weights as unknown as SubWeights;
 const MKT = market.market as Record<string, number>;
 const CIPLA = market.cipla as Record<string, number>;
+// Stability = survival under THRESHOLD jitter, not under weight jitter. Weight jitter
+// cannot move membership at all (no screen reads the weighted score), so that column was
+// 100/0 by arithmetic and told a reader nothing.
 const STABILITY: Record<string, number> = Object.fromEntries(
-  rob.weights.per_space.map((r) => [r.id, r.pass_pct]),
+  rob.thresholds.per_space.map((r) => [r.id, r.survives_pct]),
+);
+const BINDING: Record<string, { gate: string; move: number }> = Object.fromEntries(
+  rob.thresholds.per_space.map((r) => [r.id, { gate: r.binding_gate, move: r.binding_move_pct }]),
 );
 
 /* ------------------------------------------------------------------ */
@@ -224,15 +230,19 @@ export default function Page() {
                 <div className="note teal" style={{ marginTop: 14 }}>
                   <b>{shortlist.length} of {scored.length}</b> clear all five screens.
                   {dirty ? " The ordering moved; the membership did not." : " These are the deck's weights."}
-                  {" "}Across {rob.weights.draws.toLocaleString()} random weight vectors the shortlist
-                  was identical in <b>{rob.weights.identical_shortlist_pct}%</b> of draws.
+                  {" "}It cannot change: no screen reads the weighted score, so membership is
+                  invariant to these four sliders <b>by construction</b>. The test that can fail is
+                  on the gates — jitter every threshold ±{rob.thresholds.jitter_pct}% and the
+                  shortlist survives intact in <b>{rob.thresholds.identical_shortlist_pct}%</b> of
+                  {" "}{rob.thresholds.draws.toLocaleString()} runs.
                 </div>
               </div>
             </div>
 
             <div style={{ marginTop: 16 }}>
               <Leaderboard scored={scored} baseRank={baseRank} marketReal={MKT.real_growth}
-                           stability={STABILITY} selected={sel} onSelect={setSel} />
+                           stability={STABILITY} binding={BINDING}
+                           jitter={rob.thresholds.jitter_pct} selected={sel} onSelect={setSel} />
             </div>
 
             <div style={{ marginTop: 16 }}>
@@ -532,8 +542,10 @@ function Ask({ scored }: { scored: ReturnType<typeof scoreAll> }) {
             weights: {
               draws: rob.weights.draws,
               identical_shortlist_pct: rob.weights.identical_shortlist_pct,
-              weight_free_screens: rob.weights.weight_free_screens,
+              membership_is_structural: rob.weights.membership_is_structural,
+              note: "No screen reads the weighted score, so the pillar weights cannot change shortlist membership at all. The 100% is algebra, not evidence. The weights move rank order only.",
             },
+            threshold_sensitivity: rob.thresholds,
             blind_backtest_precision: rob.baselines,
             leave_one_signal_out: rob.leave_one_out,
             financial_bridge: rob.bridge,

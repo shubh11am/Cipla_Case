@@ -108,7 +108,9 @@ a { color: var(--ink); }
 .rail .foot-note code { color: #7f93a9; font-size: 9.5px; }
 
 /* --------------------------------------------------------------- canvas -- */
-.canvas { padding: 30px 38px 64px; max-width: 1280px; }
+/* min-width:0 — a grid item defaults to min-width:auto and would otherwise stretch to
+   the widest table's min-content instead of letting that table scroll inside its panel */
+.canvas { padding: 30px 38px 64px; max-width: 1280px; min-width: 0; }
 
 .head { margin-bottom: 22px; }
 .eyebrow { font-size: 10.5px; font-weight: 800; letter-spacing: 1.7px; text-transform: uppercase; color: var(--red); }
@@ -125,7 +127,7 @@ a { color: var(--ink); }
   background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
   padding: 17px 19px; box-shadow: var(--shadow);
 }
-.panel.flush { padding: 0; overflow: hidden; }
+.panel.flush { padding: 0; overflow: hidden; min-width: 0; }
 .panel.dark { background: linear-gradient(160deg, var(--ink) 0%, #0a1c31 100%); border-color: transparent; color: #fff; }
 .panel.dark h3 { color: #fff; }
 .panel h3 { margin: 0 0 3px; font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: -.1px; }

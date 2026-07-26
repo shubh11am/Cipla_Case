@@ -35,7 +35,8 @@ Field meanings that matter:
 - weight_stability_pct : share of 5,000 random weight vectors in which that space still clears all five screens
 
 A separate "robustness" object is also supplied. Use it whenever the question is about whether the model can be trusted:
-- robustness.weights          : the weight Monte Carlo. weight_free_screens are the screens that run on raw metrics and therefore cannot move with the weights at all
+- robustness.weights          : the weight Monte Carlo. Read its 100% carefully — no screen reads the weighted score, so shortlist membership is invariant to the pillar weights BY CONSTRUCTION. That 100% is algebra, not evidence, and you should say so rather than offering it as proof of robustness. The weights move rank order only.
+- robustness.threshold_sensitivity : the sensitivity test that CAN fail — every screen threshold jittered, with each space's survival rate, the gate binding it, and how far that gate must move to flip its verdict. This is the honest robustness evidence; prefer it.
 - robustness.blind_backtest_precision : the agent's blind precision against four comparator models — random selection, rank by pool size, composite score with the screens removed, and rank by value growth
 - robustness.leave_one_signal_out : how many of the external signals can be deleted individually with no change to the shortlist
 - robustness.financial_bridge : how FY26 revenue becomes FY31 revenue, and how gross profit becomes net contribution and the residual new cash

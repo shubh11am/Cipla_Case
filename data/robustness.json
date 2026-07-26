@@ -2,12 +2,15 @@
  "weights": {
   "draws": 5000,
   "identical_shortlist_pct": 100.0,
+  "membership_is_structural": true,
   "weight_free_screens": [
    "S1_MATERIALITY",
    "S2_REAL_DEMAND",
+   "S3_WINNABILITY",
    "S4_DURABILITY",
    "S5_CAPABILITY"
   ],
+  "what_weights_do_move": "rank order only",
   "per_space": [
    {
     "id": "AHT_CILNIDIPINE",
@@ -88,6 +91,126 @@
    }
   ]
  },
+ "thresholds": {
+  "draws": 5000,
+  "jitter_pct": 20,
+  "identical_shortlist_pct": 66.3,
+  "per_space": [
+   {
+    "id": "AHT_CILNIDIPINE",
+    "label": "Cilnidipine-anchored antihypertensive platform",
+    "baseline_pass": true,
+    "survives_pct": 100.0,
+    "failed_gates": [],
+    "binding_gate": "S3_WINNABILITY",
+    "binding_move_pct": 43.3
+   },
+   {
+    "id": "AHT_TELMI_CORE",
+    "label": "Telmisartan core franchise (plain, +amlodipine, +diuretic)",
+    "baseline_pass": false,
+    "survives_pct": 1.8,
+    "failed_gates": [
+     "S2_REAL_DEMAND"
+    ],
+    "binding_gate": "S2_REAL_DEMAND",
+    "binding_move_pct": 18.6
+   },
+   {
+    "id": "LIPID_SECPREV",
+    "label": "Statin + antiplatelet fixed-dose (post-event secondary prevention)",
+    "baseline_pass": true,
+    "survives_pct": 95.7,
+    "failed_gates": [],
+    "binding_gate": "S2_REAL_DEMAND",
+    "binding_move_pct": 18.5
+   },
+   {
+    "id": "AHT_BB_ARB",
+    "label": "Beta-blocker + ARB fixed-dose combinations",
+    "baseline_pass": true,
+    "survives_pct": 100.0,
+    "failed_gates": [],
+    "binding_gate": "S5_CAPABILITY",
+    "binding_move_pct": 66.7
+   },
+   {
+    "id": "LIPID_NONSTATIN",
+    "label": "Non-statin / residual-risk lipid (ezetimibe, bempedoic, saroglitazar, PCSK9)",
+    "baseline_pass": true,
+    "survives_pct": 70.4,
+    "failed_gates": [],
+    "binding_gate": "S5_CAPABILITY",
+    "binding_move_pct": 8.3
+   },
+   {
+    "id": "LIPID_FIBRATE_TG",
+    "label": "Fibrate & statin+fibrate (triglyceride / residual-risk lipid)",
+    "baseline_pass": true,
+    "survives_pct": 100.0,
+    "failed_gates": [],
+    "binding_gate": "S2_REAL_DEMAND",
+    "binding_move_pct": 38.5
+   },
+   {
+    "id": "LIPID_STATIN_CORE",
+    "label": "Core statins (atorvastatin, rosuvastatin plain)",
+    "baseline_pass": false,
+    "survives_pct": 0.0,
+    "failed_gates": [
+     "S4_DURABILITY"
+    ],
+    "binding_gate": "S4_DURABILITY",
+    "binding_move_pct": 58.5
+   },
+   {
+    "id": "AHT_OTHER",
+    "label": "Other antihypertensives (alpha-blockers, olmesartan, misc.)",
+    "baseline_pass": false,
+    "survives_pct": 0.0,
+    "failed_gates": [
+     "S2_REAL_DEMAND"
+    ],
+    "binding_gate": "S2_REAL_DEMAND",
+    "binding_move_pct": 81.3
+   },
+   {
+    "id": "AHT_TRIPLE_SPC",
+    "label": "Triple / poly antihypertensive single-pill combinations",
+    "baseline_pass": false,
+    "survives_pct": 0.0,
+    "failed_gates": [
+     "S2_REAL_DEMAND"
+    ],
+    "binding_gate": "S2_REAL_DEMAND",
+    "binding_move_pct": 27.1
+   },
+   {
+    "id": "AHT_LEGACY",
+    "label": "Legacy antihypertensives (atenolol/amlodipine, losartan, ACEi, S-amlodipine)",
+    "baseline_pass": false,
+    "survives_pct": 0.0,
+    "failed_gates": [
+     "S2_REAL_DEMAND",
+     "S4_DURABILITY"
+    ],
+    "binding_gate": "S2_REAL_DEMAND",
+    "binding_move_pct": 158.7
+   },
+   {
+    "id": "ANGINA_ANTIISCHEMIC",
+    "label": "Chronic angina / anti-ischaemic (nicorandil, nitrates, ranolazine)",
+    "baseline_pass": false,
+    "survives_pct": 0.0,
+    "failed_gates": [
+     "S2_REAL_DEMAND",
+     "S3_WINNABILITY"
+    ],
+    "binding_gate": "S2_REAL_DEMAND",
+    "binding_move_pct": 37.4
+   }
+  ]
+ },
  "baselines": {
   "spaces": 11,
   "picked": 5,
@@ -118,9 +241,9 @@
   ],
   "naive_size_hits": 3,
   "naive_size_precision": 60.0,
-  "random_mean_hits": 2.72,
-  "random_mean_precision": 54.4,
-  "random_pct_matching_agent": 1.28
+  "random_mean_hits": 2.74,
+  "random_mean_precision": 54.7,
+  "random_pct_matching_agent": 1.42
  },
  "leave_one_out": {
   "signals_tested": 14,

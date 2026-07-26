@@ -3,9 +3,9 @@
 import { fmtCr } from "@/lib/score";
 import rob from "@/data/robustness.json";
 
-const W = rob.weights;
 const B = rob.baselines;
 const L = rob.leave_one_out;
+const T = rob.thresholds;
 
 /** The two claims a judge tests first: does the model survive different weights,
  *  and does it beat the obvious alternative? Both answered with numbers. */
@@ -48,19 +48,22 @@ export function RobustnessCards() {
       </div>
 
       <div className="panel">
-        <h3>Do the weights decide the answer?</h3>
+        <h3>What would actually change the answer?</h3>
         <p style={{ fontSize: 12, color: "var(--grey)", marginTop: 0 }}>
-          Four of the five screens run on raw metrics, not scores, so they cannot move with the
-          weights at all: {W.weight_free_screens.join(", ")}. Only S3 uses a scored pillar, and it
-          clears on right-to-win <i>or</i> adjacency.
+          Not the weights. No screen reads the weighted score, and the pillar weights feed
+          nothing else — right-to-win is built from its own sub-weights. So the shortlist is
+          invariant to them <b>by construction</b>, which is a proof rather than a 5,000-draw
+          sample, and a Monte Carlo over the weights can only ever return 100%. What the
+          weights genuinely move is rank order.
         </p>
         <div style={{ display: "flex", gap: 26, margin: "14px 0 16px" }}>
           <div>
             <div style={{ fontSize: 28, fontWeight: 700, color: "var(--teal)" }}>
-              {W.identical_shortlist_pct}%
+              {T.identical_shortlist_pct}%
             </div>
             <div style={{ fontSize: 11.5, color: "var(--grey)" }}>
-              of {W.draws.toLocaleString()} random weight vectors<br />give an identical shortlist
+              of {T.draws.toLocaleString()} runs with every gate<br />
+              jittered ±{T.jitter_pct}% keep the shortlist intact
             </div>
           </div>
           <div>
@@ -73,26 +76,40 @@ export function RobustnessCards() {
           </div>
         </div>
         <table>
-          <thead><tr><th>Space</th><th className="num">In shortlist</th><th className="num">In top 5</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Space</th><th className="num">Resilience</th>
+              <th>Binding gate</th><th className="num">Move to flip</th>
+            </tr>
+          </thead>
           <tbody>
-            {[...W.per_space].sort((a, b) => b.pass_pct - a.pass_pct || b.top5_pct - a.top5_pct)
+            {[...T.per_space]
+              .sort((a, b) => Number(b.baseline_pass) - Number(a.baseline_pass) || b.survives_pct - a.survives_pct)
               .map((r) => (
                 <tr key={r.id}>
                   <td style={{ fontWeight: r.baseline_pass ? 600 : 400 }}>
-                    {r.label.length > 38 ? r.label.slice(0, 36) + "…" : r.label}
+                    {r.label.length > 34 ? r.label.slice(0, 32) + "…" : r.label}
                   </td>
-                  <td className="num" style={{ color: r.pass_pct > 50 ? "var(--teal)" : "var(--grey)", fontWeight: 600 }}>
-                    {r.pass_pct}%
+                  <td className="num" style={{
+                    color: r.survives_pct >= 90 ? "var(--teal)"
+                         : r.survives_pct >= 40 ? "var(--amber)" : "var(--faint)",
+                    fontWeight: 600,
+                  }}>
+                    {r.survives_pct}%
                   </td>
-                  <td className="num">{Math.round(r.top5_pct)}%</td>
+                  <td style={{ fontSize: 11, color: "var(--muted)" }}>{r.binding_gate.replace(/_/g, " ")}</td>
+                  <td className="num" style={{ fontSize: 11.5 }}>{r.binding_move_pct.toFixed(0)}%</td>
                 </tr>
               ))}
           </tbody>
         </table>
-        <p style={{ fontSize: 11, color: "var(--muted)", marginBottom: 0, marginTop: 8 }}>
-          The ordering moves — membership does not. Every rejected space clears in 0% of draws;
-          there is no borderline case in either direction.
-        </p>
+        <div className="note" style={{ marginTop: 12 }}>
+          <b>The thinnest margin is on Priority 1.</b> Non-statin lipid sits at a capability
+          barrier of 0.55 against a 0.60 gate — move S5 by 8% and it drops out, which is why it
+          survives only {T.per_space.find((r) => r.id === "LIPID_NONSTATIN")?.survives_pct}% of
+          jittered runs. It is the one number here we would want a Cipla operator to challenge,
+          because the barrier is a judgement, not a measurement.
+        </div>
       </div>
     </div>
   );
