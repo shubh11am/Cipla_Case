@@ -19,8 +19,8 @@ export function RobustnessCards() {
   ];
 
   return (
-    <div className="grid two" style={{ gridTemplateColumns: "1fr 1fr", marginTop: 16 }}>
-      <div className="card">
+    <div className="grid g2" style={{ gridTemplateColumns: "1fr 1fr", marginTop: 16 }}>
+      <div className="panel">
         <h3>Does it beat the obvious alternative?</h3>
         <p style={{ fontSize: 12, color: "var(--grey)", marginTop: 0 }}>
           Every model below was run on the same blind FY25 vintage and scored on the withheld
@@ -47,7 +47,7 @@ export function RobustnessCards() {
         </div>
       </div>
 
-      <div className="card">
+      <div className="panel">
         <h3>Do the weights decide the answer?</h3>
         <p style={{ fontSize: 12, color: "var(--grey)", marginTop: 0 }}>
           Four of the five screens run on raw metrics, not scores, so they cannot move with the
@@ -102,8 +102,8 @@ export function RobustnessCards() {
 export function Bridges() {
   const b = rob.bridge;
   return (
-    <div className="grid two" style={{ gridTemplateColumns: "1fr 1fr", marginTop: 16 }}>
-      <div className="card">
+    <div className="grid g2" style={{ gridTemplateColumns: "1fr 1fr", marginTop: 16 }}>
+      <div className="panel">
         <h3>Revenue bridge, FY26 → FY31</h3>
         <table>
           <thead><tr><th>Step</th><th className="num">₹ Cr</th><th>Basis</th></tr></thead>
@@ -132,7 +132,7 @@ export function Bridges() {
         </table>
       </div>
 
-      <div className="card">
+      <div className="panel">
         <h3>Contribution bridge, cumulative 5 years</h3>
         <table>
           <tbody>
@@ -176,7 +176,7 @@ export function YearByYear() {
   const cell = (v: number, neg = false) =>
     neg ? `(${Math.round(Math.abs(v))})` : Math.round(v).toLocaleString("en-IN");
   return (
-    <div className="card" style={{ marginTop: 16 }}>
+    <div className="panel" style={{ marginTop: 16 }}>
       <h3>Year by year, incremental over FY26 (₹ Cr)</h3>
       <table>
         <thead>
@@ -221,7 +221,7 @@ export function YearByYear() {
 /** If the incumbents fight back. */
 export function CompetitiveResponse() {
   return (
-    <div className="card" style={{ marginTop: 16 }}>
+    <div className="panel" style={{ marginTop: 16 }}>
       <h3>If Torrent, Lupin or USV retaliate</h3>
       <p style={{ fontSize: 12.5, color: "var(--grey)", marginTop: 0 }}>
         Every target is a claim on <b>pool growth</b>, not on a competitor&apos;s shelf. Each leader

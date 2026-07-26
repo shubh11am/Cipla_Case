@@ -21,7 +21,7 @@ export default function SpaceDetail({ s, pillars }: { s: Scored; pillars: Pillar
   ];
 
   return (
-    <div className="card">
+    <div className="panel">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: 12 }}>
         <div>
           <h3 style={{ fontSize: 15, marginBottom: 2 }}>{s.label}</h3>
