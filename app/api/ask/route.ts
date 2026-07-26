@@ -63,12 +63,31 @@ async function askGemini(prompt: string): Promise<string> {
   const { GoogleGenAI } = await import("@google/genai");
   const ai = new GoogleGenAI({ apiKey: GEMINI_KEY() as string });
   const model = await resolveGeminiModel(GEMINI_KEY() as string);
-  const res = await ai.models.generateContent({
-    model,
-    contents: prompt,
-    config: { systemInstruction: SYSTEM, maxOutputTokens: 1200 },
-  });
-  return (res.text ?? "").trim();
+
+  // These models think before they answer, and the thinking is drawn from the SAME
+  // budget as the reply — which is how a 1,200-token cap shipped answers that stopped
+  // mid-sentence. Give the budget real headroom and keep the thinking short; the reply
+  // we want is six sentences, not an essay.
+  const config = { systemInstruction: SYSTEM, maxOutputTokens: 8192 };
+  let res;
+  try {
+    res = await ai.models.generateContent({
+      model, contents: prompt,
+      config: { ...config, thinkingConfig: { thinkingBudget: 256 } },
+    });
+  } catch {
+    // some models refuse an explicit thinking budget — take the default instead
+    res = await ai.models.generateContent({ model, contents: prompt, config });
+  }
+
+  const text = (res.text ?? "").trim();
+  const finish = String(res.candidates?.[0]?.finishReason ?? "");
+  if (!text) throw new Error(`Gemini returned no text (finishReason ${finish || "unknown"}).`);
+  // never hand back a half sentence as though it were the answer
+  if (finish === "MAX_TOKENS") {
+    return text.replace(/\s+$/, "") + " …\n\n[The reply hit the length limit and was cut off. Ask a narrower question.]";
+  }
+  return text;
 }
 
 async function askClaude(prompt: string): Promise<string> {
@@ -77,15 +96,19 @@ async function askClaude(prompt: string): Promise<string> {
   const model = process.env.ANTHROPIC_MODEL || "claude-opus-5";
   const msg = await client.messages.create({
     model,
-    max_tokens: 1200,
+    max_tokens: 2048,
     system: SYSTEM,
     messages: [{ role: "user", content: prompt }],
   });
   if (msg.stop_reason === "refusal") return "That request was declined. Try rephrasing it.";
-  return msg.content
+  const text = msg.content
     .map((b) => (b.type === "text" ? b.text : ""))
     .join("\n")
     .trim();
+  if (msg.stop_reason === "max_tokens") {
+    return text + " …\n\n[The reply hit the length limit and was cut off. Ask a narrower question.]";
+  }
+  return text;
 }
 
 export async function POST(req: Request) {
